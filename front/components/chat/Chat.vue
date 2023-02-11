@@ -27,21 +27,24 @@
 
 <script>
 import { useWebSocket } from '@vueuse/core'
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   setup() {
-    const { status, data, send } = useWebSocket('ws://localhost:8765', {
+    const { send } = useWebSocket(`ws://localhost:8765`, {
+      onMessage(ws, event) {
+          console.log('data', event);
+      },
       autoReconnect: {
         retries: 3,
         delay: 1000,
         onFailed() {
           alert('Failed to connect WebSocket after 3 retries')
-        },
+        }
       },
     })
 
     send('yopt');
-    console.log(data, 'data');
   }
 }
 </script>

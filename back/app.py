@@ -1,28 +1,30 @@
 import asyncio
-import http
 import signal
-import sys
-import time
-
 import websockets
 
 
-async def slow_echo(websocket):
-    async for message in websocket:
-        await websocket.send(f"Message received: {message}")
+USERS = set()
 
 
-async def health_check(path, request_headers):
-    if path == "/healthz":
-        return http.HTTPStatus.OK, [], b"OK\n"
-    if path == "/inemuri":
-        loop = asyncio.get_running_loop()
-        loop.call_later(1, time.sleep, 10)
-        return http.HTTPStatus.OK, [], b"Sleeping for 10s\n"
-    if path == "/seppuku":
-        loop = asyncio.get_running_loop()
-        loop.call_later(1, sys.exit, 69)
-        return http.HTTPStatus.OK, [], b"Terminating\n"
+async def addUser(websocket):
+    USERS.add(websocket)
+
+
+async def removeUser(websocket):
+    USERS.remove(websocket)
+
+
+async def handler(websocket):
+    await addUser(websocket)
+
+    try:
+        while True:
+            message = f"received: {await websocket.recv()}, users: {len(USERS)} path: {websocket.path}"
+            await asyncio.wait(
+                [user.send(message) for user in USERS]
+            )
+    finally:
+        await removeUser(websocket)
 
 
 async def main():
@@ -31,10 +33,9 @@ async def main():
     loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
 
     async with websockets.serve(
-        slow_echo,
+        handler,
         host="",
-        port=8765,
-        process_request=health_check,
+        port=8765
     ):
         await stop
 

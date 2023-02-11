@@ -12,5 +12,5 @@
 
 ## To connect
 ```
-  python -m websockets ws://localhost:8081/
+  python -m websockets ws://localhost:8765/
 ```
