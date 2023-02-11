@@ -1,8 +1,8 @@
-import { reactive } from 'vue';
+import { reactive, readonly } from 'vue';
 
 const state = reactive({
   counter: 0,
-  colorCode: 'blue'
+  colorCode: 'red'
 });
 
 const methods = {
@@ -12,6 +12,9 @@ const methods = {
   increment() {
     state.counter++
   },
+  setColorCode(val) {
+    state.colorCode = val;
+  }
 };
 
 const getters = {
@@ -21,7 +24,7 @@ const getters = {
 };
 
 export default {
-  state,
+  state: readonly(state),
   methods,
   getters
 }
