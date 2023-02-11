@@ -1,7 +1,9 @@
 <template>
-  <span class="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-gray-900" @click="store.methods.decrement">-</span>
-   {{ store.state.counter }}
-  <span class="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-gray-900" @click="store.methods.increment">+</span>
+  <div class="p-4 counter">
+    <button class="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white" @click="store.methods.decrement">-</button>
+    <span class="value p-4">{{ store.state.counter }}</span>
+    <button class="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white" @click="store.methods.increment">+</button>
+  </div>
 </template>
 
 <script>
