@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  front:
+    build:
+      context: ./front
+    image: nuxt_dev
+    container_name: nuxt_dev
+    command: npm run dev
+    volumes:
+    - ./front:/app
+    - /app/node_modules
+    ports:
+      - "3000:3000"

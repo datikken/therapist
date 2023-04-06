@@ -17,6 +17,7 @@ import { inject, computed } from 'vue';
 export default {
   setup() {
     const store = inject('store');
+    
     const colorCode = computed({
       get() {
         return store.state.colorCode
